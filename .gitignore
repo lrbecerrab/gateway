@@ -1,4 +1,5 @@
 node_modules
+constants.js
 .env
 coverage
 coverage.json
