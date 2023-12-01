@@ -1,0 +1,155 @@
+[
+    {
+        "type": "measured",
+        "name" : "voltage_l1",
+        "address" : 81,
+        "measure_unit" : "V",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling" : 1
+    },
+    {
+        "type": "measured",
+        "name" : "voltage_l2",
+        "address": 83,
+        "measure_unit": "V",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name" : "voltage_l3",
+        "address": 85,
+        "measure_unit": "V",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name" : "voltage_l1_l2",
+        "address": 89,
+        "measure_unit": "V",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name" : "voltage_l2_l3",
+        "address": 91,
+        "measure_unit": "V",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name":"voltage_l3_l1",
+        "address": 93,
+        "measure_unit": "V",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name": "current_l1",
+        "address": 97,
+        "measure_unit": "A",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name": "current_l2",
+        "address": 99,
+        "measure_unit": "A",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name": "current_l3",
+        "address": 101,
+        "measure_unit": "A",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name": "current_N",
+        "address": 103,
+        "measure_unit": "A",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name": "active_power",
+        "address": 111,
+        "measure_unit": "W",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name": "aparent_power",
+        "address": 119,
+        "measure_unit": "VA",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name": "reactive_power",
+        "address": 127,
+        "measure_unit": "VAR",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name": "power_factor",
+        "address": 135,
+        "measure_unit": "",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "measured",
+        "name": "frecuency",
+        "address": 137,
+        "measure_unit": "Hz",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "metered",
+        "name" : "generated_energy",
+        "address": 1281,
+        "measure_unit": "kWh",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    },
+    {
+        "type": "metered",
+        "name" : "consumed_energy",
+        "address": 1289,
+        "measure_unit": "kWh",
+        "length": 2,
+        "data_format": "32bFlBE",
+        "scaling": 1
+    }
+]            

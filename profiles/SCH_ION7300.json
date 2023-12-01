@@ -1,0 +1,136 @@
+{
+    "product_information": {
+        "manufacturer": "Schneider-Electric ",
+        "reference": "Ion serie 7300"
+    },
+        "measures": {
+        "voltage_l1": {
+            "function_code": "04",
+            "length": 1,
+            "data_format": "UINT",
+            "address": 11,
+            "measure_unit": "V",
+            "scaling": 10
+        },
+        "voltage_l2": {
+            "function_code": "04",
+            "length": 1,
+            "data_format": "UINT",
+            "address": 12,
+            "measure_unit": "V",
+            "scaling": 10
+        },
+        "voltage_l3": {
+            "function_code": "04",
+            "length": 1,
+            "data_format": "UINT",
+            "address": 13,
+            "measure_unit": "V",
+            "scaling": 10
+        },
+        "voltage_l1_l2": {
+            "function_code": "04",
+            "length": 1,
+            "data_format": "UINT",
+            "address": 15,
+            "measure_unit": "V",
+            "scaling": 1
+        },
+        "voltage_l2_l3": {
+            "function_code": "04",
+            "length": 1,
+            "data_format": "UINT",
+            "address": 16,
+            "measure_unit": "V",
+            "scaling": 1
+        },
+        "voltage_l3_l1": {
+            "function_code": "04",
+            "length": 1,
+            "data_format": "UINT",
+            "address": 17,
+            "measure_unit": "V",
+            "scaling": 1
+        },
+        "current_l1": {
+            "function_code": "04",
+            "length": 1,
+            "data_format": "UINT",
+            "address": 19,
+            "measure_unit": "A",
+            "scaling": 10
+        },
+        "current_l2": {
+            "function_code": "04",
+            "length": 1,
+            "data_format": "UINT",
+            "address": 20,
+            "measure_unit": "A",
+            "scaling": 10
+        },
+        "current_l3": {
+            "function_code": "04",
+            "length": 1,
+            "data_format": "UINT",
+            "address": 21,
+            "measure_unit": "A",
+            "scaling": 10
+        },
+        "frecuency": {
+            "function_code": "04",
+            "length": 1,
+            "data_format": "UINT",
+            "address": 25,
+            "measure_unit": "Hz",
+            "scaling": 10
+        },
+        "active_power": {
+            "function_code": "04",
+            "length": 2,
+            "data_format": "32INT",
+            "address": 33,
+            "measure_unit": "W",
+            "scaling": 10
+        },
+        "aparent_power": {
+            "function_code": "04",
+            "length": 2,
+            "data_format": "32INT",
+            "address":49,
+            "measure_unit": "VA",
+            "scaling": 10
+        },
+        "reactive_power": {
+            "function_code": "04",
+            "length": 2,
+            "data_format": "32INT",
+            "address": 41,
+            "measure_unit": "VAR",
+            "scaling": 10
+        },
+        "power_factor": {
+            "function_code": "04",
+            "length": 2,
+            "data_format": "32INT",
+            "address": 57,
+            "measure_unit": "",
+            "scaling": 10
+        },
+        "generated_energy": {
+            "function_code": "04",
+            "length": 2,
+            "data_format": "32INT",
+            "address": 89,
+            "measure_unit": "kWh",
+            "scaling": 1
+        },
+        "consumed_energy": {
+            "function_code": "04",
+            "length": 2,
+            "data_format": "32INT",
+            "address": 91,
+            "measure_unit": "kWh",
+            "scaling": 1
+        }
+    }
+}
