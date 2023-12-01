@@ -1,6 +1,7 @@
 const ethers = require("ethers");
 
-const contractInstance = async (
+const createContract = async (
+  name,
   providerUrl,
   contractAddress,
   contractAbi,
@@ -9,18 +10,31 @@ const contractInstance = async (
   const provider = new ethers.providers.JsonRpcProvider(providerUrl);
   const signer = new ethers.Wallet(signerpk, provider);
   const contract = new ethers.Contract(contractAddress, contractAbi, signer);
-  console.log(`Contrato:${contract.target} desplegado`);
+  console.log(`Contrato ${name}: ${contract.address} desplegado`);
   return contract;
 };
 
 const sendTransaction = async (
-  contract,
+  name,
+  providerUrlroviderUrl,
+  contractAddress,
+  contractAbi,
   meterAddress,
+  meterPK,
   _energyConsumed,
   _energyProduced
 ) => {
   try {
-    const transaction = await contract.meterReport(
+    const contract = createContract(
+      name,
+      providerUrlroviderUrl,
+      contractAddress,
+      contractAbi,
+      meterAddress,
+      meterPK
+    );
+    if (!contract) throw new Error("No se ha podido obtener el contrato");
+    const transaction = contract.meterReport(
       meterAddress,
       _energyConsumed,
       _energyProduced
@@ -32,7 +46,7 @@ const sendTransaction = async (
     console.log(error);
   } finally {
     console.log("Transacción finalizada");
-  }; 
+  }
 };
 
-module.exports = { contractInstance, sendTransaction };
+module.exports = { sendTransaction };
