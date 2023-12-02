@@ -25,16 +25,16 @@ const sendTransaction = async (
   _energyProduced
 ) => {
   try {
-    const contract = createContract(
+    const contract = await createContract(
       name,
       providerUrlroviderUrl,
       contractAddress,
       contractAbi,
-      meterAddress,
       meterPK
     );
     if (!contract) throw new Error("No se ha podido obtener el contrato");
-    const transaction = contract.meterReport(
+    console.log('contract: ', contract);    
+    const transaction = await contract.meterReport(
       meterAddress,
       _energyConsumed,
       _energyProduced
