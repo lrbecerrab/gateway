@@ -2,10 +2,10 @@ const ethers = require("ethers");
 
 const createContract = async (
   name,
+  signerpk,
   providerUrl,
   contractAddress,
-  contractAbi,
-  signerpk
+  contractAbi
 ) => {
   const provider = new ethers.providers.JsonRpcProvider(providerUrl);
   const signer = new ethers.Wallet(signerpk, provider);
@@ -16,24 +16,23 @@ const createContract = async (
 
 const sendTransaction = async (
   name,
+  signerPK,
   providerUrlroviderUrl,
   contractAddress,
   contractAbi,
   meterAddress,
-  meterPK,
   _energyConsumed,
   _energyProduced
 ) => {
   try {
     const contract = await createContract(
       name,
+      signerPK,
       providerUrlroviderUrl,
       contractAddress,
-      contractAbi,
-      meterPK
+      contractAbi
     );
     if (!contract) throw new Error("No se ha podido obtener el contrato");
-    console.log('contract: ', contract);    
     const transaction = await contract.meterReport(
       meterAddress,
       _energyConsumed,
