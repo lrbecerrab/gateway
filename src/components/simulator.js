@@ -1,36 +1,15 @@
-const getEnergyConsumed = (nominalValue) => {
-  return Math.random() * nominalValue;
+const { sendTransaction } = require("./dlt.js");
+
+const getEnergy = (nominalValue) => {
+  return Math.floor(Math.random() * nominalValue);
 };
 
-const getEnergyProduced = (nominalValue) => {
-  return Math.random() * nominalValue * 1.15;
+const simulateEnergy = (consumer, producer) => {
+  let energy = [0, 0];
+  console.log("Simulating energy...Ctrl+C to stop");
+  if (consumer) energy[0] += getEnergy(5);
+  if (producer) energy[1] += getEnergy(8);
+  return energy;
 };
 
-const getVoltageValue = (nominalValue) => {
-  return Math.random() * nominalValue;
-};
-const getCurrentValue = (nominalValue) => {
-  return Math.random() * nominalValue;
-};
-
-const getPFValue = () => {
-  return Math.random(1);
-};
-
-const getFrecuencyValue = (nominalValue) => {
-  return Math.random() * nominalValue;
-};
-
-const getPowerValue = (current, voltage, pf) => {
-  return current * voltage * pf;
-};
-
-module.exports = {
-  getEnergyConsumed,
-  getEnergyProduced,
-  getVoltageValue,
-  getCurrentValue,
-  getPFValue,
-  getFrecuencyValue,
-  getPowerValue,
-};
+module.exports = { simulateEnergy };

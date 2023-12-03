@@ -1,4 +1,7 @@
-const { contractInstance, sendTransaction } = require("./components/dlt");
+const { array } = require("yargs");
+const { createContract, sendTransaction } = require("./components/dlt.js");
+const { simulateEnergy } = require("./components/simulator.js");
+
 const {
   ethereumProviderUrl,
   ethereumContractAddress,
@@ -6,26 +9,108 @@ const {
   iotaProviderUrl,
   iotaContractAddress,
   iotaAbi,
+  signerPrivateKey,
 } = require("./utils/constants");
 
+var argv = require("yargs/yargs")(process.argv.slice(2))
+  .usage("Usage: $0 simulated -a='0xffabc'--<options>")
+  .usage("Usage: $0 real -a='0xffabc' tcp/serial --<options>")
+  .describe("a", "the meter account in Ethereum or Iota")
+  .describe("e", "network Ethereum-Sepolia")
+  .describe("t", "network Iota-Shimmer")
+  .describe("b", "serial baudrate")
+  .describe("i", "ip Address")
+  .describe("s", "serial port")
+  .describe("p", "socket port")
+  .describe("m", "modbus id")
+  .describe("r", "producer")
+  .describe("c", "consumer")
+  .example(
+    "$0 simulated a='0xffabc' -e -<r/c>",
+    "meter simulated with addres 0xffabc, type producer/consumer reporting to Sepolia"
+  )
+  .example(
+    "$0 real a='0xffabc' -t serial -b 9600 -c COM1 -m 1",
+    "real meter connection serial port COM1 baudrate 9600 modbus id 1 reporting to Shimmer"
+  )
+  .example(
+    "$0 real tcp -i -e 192.168.1.1 -p 502 -m 1",
+    "real meter connection tpc/ip port 502 modbus id 1 reporting to Sepolia"
+  ).argv;
 
+const type = argv._[0];
+const comm = argv._[1];
+const meterAddress = "0x93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9";
+const baudrate = argv.b;
+const serialPort = argv.s;
+const ipAddress = argv.i;
+const port = argv.p;
+const modbusId = argv.m;
+const producer = argv.r || false;
+const consumer = argv.c || false;
+const ethereumNetwork = argv.e || false;
+const iotaNetwork = argv.t || false;
 
-// Constantes
+console.log(`You have selected a ${type} meter with address ${meterAddress}`);
 
-const contractEthereum = contractInstance(
-  ethereumProviderUrl,
-  ethereumContractAddress,
-  ethereumAbi,
-  METER_PK
-);
+let providerUrl;
+let contractAddress;
+let abi;
 
-const contractIota = contractInstance(
-  iotaProviderUrl,
-  iotaContractAddress,
-  iotaAbi,
-  METER_PK
-);
+if (ethereumNetwork) {
+  providerUrl = ethereumProviderUrl;
+  contractAddress = ethereumContractAddress;
+  abi = ethereumAbi;
+} else if (iotaNetwork) {
+  providerUrl = iotaProviderUrl;
+  contractAddress = iotaContractAddress;
+  abi = iotaAbi;
+}
+const delay = 30000;
 
-// Enviar transacción a la red Ethereum
+const contract = new Promise(async (resolve, reject) => {
+  const contractInstance = await createContract(
+    signerPrivateKey,
+    providerUrl,
+    contractAddress,
+    abi
+  );
+  resolve(contractInstance);
+})
+  .then(async (contractInstance) => {
+    let energy = [0, 0];
+    if (type === "simulated") {
+      simulatedEnergy = simulateEnergy(consumer, producer, delay);
+      energy[0] = simulatedEnergy[0];
+      energy[1] = simulatedEnergy[1];
+    } else if (type === "real") {
+      if (comm === "serial") {
+        const { reportSerial } = require("./components/modbus.js");
+        reportSerial(
+          contractInstance,
+          meterAddress,
+          baudrate,
+          serialPort,
+          modbusId,
+          consumer,
+          producer
+        );
+      } else if (comm === "tcp") {
+        const { reportTCP } = require("./components/modbus.js");
+        reportTCP(
+          contractInstance,
+          meterAddress,
+          ipAddress,
+          port,
+          modbusId,
+          consumer,
+          producer
+        );
+      }
+    }
 
-const sendTransactionEthereum = sendTransaction(contractEthereum, METER_ADDRESS, 10, 10);
+    const transact = new Promise( )
+  })
+  .catch((error) => {
+    console.log(error);
+  });
