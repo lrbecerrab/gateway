@@ -1,6 +1,6 @@
 const ethers = require("ethers");
 
-const createContract = async (
+const createContract = (
   signerpk,
   providerUrl,
   contractAddress,
@@ -19,17 +19,15 @@ const sendTransaction = async (
   _energyProduced
 ) => {
   try {
-    if (!contract) throw new Error("No se ha podido obtener el contrato");
     const transaction = await contract.meterReport(
       meterAddress,
       _energyConsumed,
       _energyProduced
     );
     console.log(
-      `Transaction - ${transaction.hash}, energy: ${_energyConsumed}, ${_energyProduced}`
+      `Transacción - ${transaction.hash}, energyConsumed: ${_energyConsumed}, energyProduced: ${_energyProduced}`
     );
-    await transaction.wait();
-    console.log(`Transacción - ${transaction.hash} ejecutada`);
+    return transaction;
   } catch (error) {
     console.log(error);
   }

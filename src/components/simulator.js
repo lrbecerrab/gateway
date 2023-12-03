@@ -6,7 +6,6 @@ const getEnergy = (nominalValue) => {
 
 const simulateEnergy = (consumer, producer) => {
   let energy = [0, 0];
-  console.log("Simulating energy...Ctrl+C to stop");
   if (consumer) energy[0] += getEnergy(5);
   if (producer) energy[1] += getEnergy(8);
   return energy;

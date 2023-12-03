@@ -66,10 +66,10 @@ if (ethereumNetwork) {
   contractAddress = iotaContractAddress;
   abi = iotaAbi;
 }
-const delay = 30000;
+const delay = 5000;
 
 const contract = new Promise(async (resolve, reject) => {
-  const contractInstance = await createContract(
+  const contractInstance = createContract(
     signerPrivateKey,
     providerUrl,
     contractAddress,
@@ -78,38 +78,58 @@ const contract = new Promise(async (resolve, reject) => {
   resolve(contractInstance);
 })
   .then(async (contractInstance) => {
-    let energy = [0, 0];
-    if (type === "simulated") {
-      simulatedEnergy = simulateEnergy(consumer, producer, delay);
-      energy[0] = simulatedEnergy[0];
-      energy[1] = simulatedEnergy[1];
-    } else if (type === "real") {
-      if (comm === "serial") {
-        const { reportSerial } = require("./components/modbus.js");
-        reportSerial(
-          contractInstance,
-          meterAddress,
-          baudrate,
-          serialPort,
-          modbusId,
-          consumer,
-          producer
-        );
-      } else if (comm === "tcp") {
-        const { reportTCP } = require("./components/modbus.js");
-        reportTCP(
-          contractInstance,
-          meterAddress,
-          ipAddress,
-          port,
-          modbusId,
-          consumer,
-          producer
-        );
-      }
-    }
-
-    const transact = new Promise( )
+    const energyMeasures = new Promise(async (resolve, reject) => {
+      console.log("Reporting energy...Ctrl+C to stop");
+      setInterval(() => {
+        let energy = [0, 0];
+        if (type === "simulated") {
+          const reportedEnergy = simulateEnergy(consumer, producer, delay);
+          energy[0] += reportedEnergy[0];
+          energy[1] += reportedEnergy[1];
+        } else if (type === "real") {
+          if (comm === "serial") {
+            const { reportSerial } = require("./components/modbus.js");
+            reportSerial(
+              contractInstance,
+              meterAddress,
+              baudrate,
+              serialPort,
+              modbusId,
+              consumer,
+              producer
+            );
+          } else if (comm === "tcp") {
+            const { reportTCP } = require("./components/modbus.js");
+            reportTCP(
+              contractInstance,
+              meterAddress,
+              ipAddress,
+              port,
+              modbusId,
+              consumer,
+              producer
+            );
+          }
+        }
+        resolve(energy);
+      }, delay);
+    })
+      .then(async (energy) => {
+        const transaction = new Promise(async (resolve, reject) => {
+          const tx = await sendTransaction(
+            contractInstance,
+            meterAddress,
+            energy[0],
+            energy[1]
+          );
+          resolve(tx);
+        }).then(async (tx) => {
+          console.log(`Transacción - ${tx.hash} ejecutada`);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   })
   .catch((error) => {
     console.log(error);
