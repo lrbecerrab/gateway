@@ -24,9 +24,9 @@ var argv = require("yargs/yargs")(process.argv.slice(2))
   .describe("i", "ip Address")
   .describe("s", "serial port")
   .describe("p", "socket port")
-  .describe("m", "modbus id")
   .describe("r", "producer")
   .describe("c", "consumer")
+  .option("modbus Id", { alias: "m", describe: "modbus id", type: "number" })
   .example(
     "$0 simulated a='0xffabc' -e -<r/c>",
     "meter simulated with addres 0xffabc, type producer/consumer reporting to Sepolia"
@@ -70,7 +70,7 @@ if (ethereumNetwork) {
   contractAddress = iotaContractAddress;
   abi = iotaAbi;
 }
-const delay = 60000;
+const delay = 30000;
 
 const reportingMeasures = new Promise(async (resolve, reject) => {
   const contract = await createContract(
