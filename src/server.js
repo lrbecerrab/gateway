@@ -53,7 +53,9 @@ const consumer = argv.c || false;
 const ethereumNetwork = argv.e || false;
 const iotaNetwork = argv.t || false;
 
-console.log(`You have selected a ${type} meter with address ${meterAddress}`);
+console.log(
+  `You have selected a ${type} meter with address ${meterAddress} using ${comm} communication`
+);
 
 let providerUrl;
 let contractAddress;
@@ -68,56 +70,50 @@ if (ethereumNetwork) {
   contractAddress = iotaContractAddress;
   abi = iotaAbi;
 }
-const delay = 20000;
+const delay = 60000;
 
-const contract = createContract(
-  signerPrivateKey,
-  providerUrl,
-  contractAddress,
-  abi
-);
-
-console.log("Reporting energy...Ctrl+C to stop");
-let energy = [0, 0];
-setInterval(
-  () => {
-    const energyMeasures = new Promise((resolve, reject) => {
-      if (type === "simulated") {
-        const reportedEnergy = simulateEnergy(consumer, producer, energy);
-        energy[0] = reportedEnergy[0];
-        energy[1] = reportedEnergy[1];
+const reportingMeasures = new Promise(async (resolve, reject) => {
+  const contract = await createContract(
+    signerPrivateKey,
+    providerUrl,
+    contractAddress,
+    abi
+  );
+  resolve(contract);
+}).then((contract) => {
+  const typeSource = new Promise(async (resolve, reject) => {
+    if (type === "simulated") {
+      const reportedEnergy = await simulateEnergy(
+        contract,
+        meterAddress,
+        consumer,
+        producer,
+        delay
+      );
+    }
+    if (type === "real") {
+      if (comm === "serial") {
+        const reportedEnergy = await reportSerial(
+          contract,
+          meterAddress,
+          serialPort,
+          baudrate,
+          modbusId,
+          delay
+        );
+      } else if (comm === "tcp") {
+        const reportedEnergy = await reportTCP(
+          contract,
+          meterAddress,
+          ipAddress,
+          port,
+          modbusId,
+          delay
+        );
       }
-      if (type === "real") {
-        if (comm === "serial") {
-
-          const reportedEnergy= reportSerial(serialPort, baudrate, modbusId, delay, energy);
-          energy[0] = reportedEnergy[0];
-          energy[1] = reportedEnergy[1];
-        } else if (comm === "tcp") {
-          const reportedEnergy= reportTCP(ipAddress, port, modbusId, delay, energy);
-          energy[0] = reportedEnergy[0];
-          energy[1] = reportedEnergy[1];
-        }
-      }
-      resolve(energy);
-    })
-      .then(async (energy) => {
-        const transaction = new Promise(async (resolve, reject) => {
-          const tx = await sendTransaction(
-            contract,
-            meterAddress,
-            energy[0],
-            energy[1]
-          );
-          resolve(tx);
-        }).then(async (tx) => {
-          console.log(`Transacción - ${tx.hash} ok`);
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  },
-  delay,
-  energy
-);
+    }
+    resolve(typeSource);
+  }).catch((error) => {
+    throw new Error(error);
+  });
+});
