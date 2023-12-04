@@ -40,7 +40,7 @@ var argv = require("yargs/yargs")(process.argv.slice(2))
 
 const type = argv._[0];
 const comm = argv._[1];
-const meterAddress = "0x93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9";
+const meterAddress = argv.a.toString(16);
 const baudrate = argv.b;
 const serialPort = argv.s;
 const ipAddress = argv.i;
@@ -66,71 +66,69 @@ if (ethereumNetwork) {
   contractAddress = iotaContractAddress;
   abi = iotaAbi;
 }
-const delay = 5000;
+const delay = 20000;
 
-const contract = new Promise(async (resolve, reject) => {
-  const contractInstance = createContract(
-    signerPrivateKey,
-    providerUrl,
-    contractAddress,
-    abi
-  );
-  resolve(contractInstance);
-})
-  .then(async (contractInstance) => {
-    const energyMeasures = new Promise(async (resolve, reject) => {
-      console.log("Reporting energy...Ctrl+C to stop");
-      setInterval(() => {
-        let energy = [0, 0];
-        if (type === "simulated") {
-          const reportedEnergy = simulateEnergy(consumer, producer, delay);
-          energy[0] += reportedEnergy[0];
-          energy[1] += reportedEnergy[1];
-        } else if (type === "real") {
-          if (comm === "serial") {
-            const { reportSerial } = require("./components/modbus.js");
-            reportSerial(
-              contractInstance,
-              meterAddress,
-              baudrate,
-              serialPort,
-              modbusId,
-              consumer,
-              producer
-            );
-          } else if (comm === "tcp") {
-            const { reportTCP } = require("./components/modbus.js");
-            reportTCP(
-              contractInstance,
-              meterAddress,
-              ipAddress,
-              port,
-              modbusId,
-              consumer,
-              producer
-            );
-          }
+const contract = createContract(
+  signerPrivateKey,
+  providerUrl,
+  contractAddress,
+  abi
+);
+
+console.log("Reporting energy...Ctrl+C to stop");
+let energy = [0, 0];
+setInterval(
+  () => {
+    const energyMeasures = new Promise((resolve, reject) => {
+      if (type === "simulated") {
+        const reportedEnergy = simulateEnergy(consumer, producer, energy);
+        energy[0] = reportedEnergy[0];
+        energy[1] = reportedEnergy[1];
+      }
+      if (type === "real") {
+        if (comm === "serial") {
+          const { reportSerial } = require("./components/modbustcp.js");
+          reportSerial(
+            contractInstance,
+            meterAddress,
+            baudrate,
+            serialPort,
+            modbusId,
+            consumer,
+            producer
+          );
+        } else if (comm === "tcp") {
+          const { reportTCP } = require("./components/modbustcp.js");
+          reportTCP(
+            contractInstance,
+            meterAddress,
+            ipAddress,
+            port,
+            modbusId,
+            consumer,
+            producer
+          );
         }
-        resolve(energy);
-      }, delay);
+      }
+      resolve(energy);
     })
       .then(async (energy) => {
         const transaction = new Promise(async (resolve, reject) => {
           const tx = await sendTransaction(
-            contractInstance,
+            contract,
             meterAddress,
             energy[0],
             energy[1]
           );
           resolve(tx);
         }).then(async (tx) => {
-          console.log(`Transacción - ${tx.hash} ejecutada`);
+          console.log(`Transacción - ${tx.hash} ok`);
         });
       })
       .catch((error) => {
         console.log(error);
       });
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+  },
+  delay,
+  energy
+);

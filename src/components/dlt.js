@@ -19,14 +19,15 @@ const sendTransaction = async (
   _energyProduced
 ) => {
   try {
+    console.log(
+      `E consumida: ${_energyConsumed}, E producida: ${_energyProduced}`
+    );
     const transaction = await contract.meterReport(
       meterAddress,
       _energyConsumed,
       _energyProduced
     );
-    console.log(
-      `Transacción - ${transaction.hash}, energyConsumed: ${_energyConsumed}, energyProduced: ${_energyProduced}`
-    );
+    console.log(`Transacción - ${transaction.hash}`);
     return transaction;
   } catch (error) {
     console.log(error);
