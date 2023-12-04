@@ -1,6 +1,8 @@
 const { array } = require("yargs");
 const { createContract, sendTransaction } = require("./components/dlt.js");
 const { simulateEnergy } = require("./components/simulator.js");
+const { reportTCP } = require("./components/modbustcp.js");
+const { reportSerial } = require("./components/modbustcp.js");
 
 const {
   ethereumProviderUrl,
@@ -87,27 +89,14 @@ setInterval(
       }
       if (type === "real") {
         if (comm === "serial") {
-          const { reportSerial } = require("./components/modbustcp.js");
-          reportSerial(
-            contractInstance,
-            meterAddress,
-            baudrate,
-            serialPort,
-            modbusId,
-            consumer,
-            producer
-          );
+
+          const reportedEnergy= reportSerial(serialPort, baudrate, modbusId, delay, energy);
+          energy[0] = reportedEnergy[0];
+          energy[1] = reportedEnergy[1];
         } else if (comm === "tcp") {
-          const { reportTCP } = require("./components/modbustcp.js");
-          reportTCP(
-            contractInstance,
-            meterAddress,
-            ipAddress,
-            port,
-            modbusId,
-            consumer,
-            producer
-          );
+          const reportedEnergy= reportTCP(ipAddress, port, modbusId, delay, energy);
+          energy[0] = reportedEnergy[0];
+          energy[1] = reportedEnergy[1];
         }
       }
       resolve(energy);

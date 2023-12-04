@@ -2,7 +2,7 @@ const modbus = require("jsmodbus");
 
 const net = require("net");
 
-const reportTCP = (ipAddress, port, modbusId, delay, _energy) => {
+const reportSerial = (port, baudrate, modbusId, delay, _energy) => {
   const options = {
     host: ipAddress,
     port: port,
