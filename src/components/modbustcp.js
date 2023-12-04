@@ -1,5 +1,6 @@
 const modbus = require("jsmodbus");
 const net = require("net");
+const { sendTransaction } = require("./dlt.js");
 
 const reportTCP = (
   contract,
@@ -31,11 +32,26 @@ const reportTCP = (
         return;
       }
       cycleDone = false;
-      console.log("Econsumed, Eproduced");
       const fc03 = client.readHoldingRegisters(0, 2).then(function (resp) {
-        console.log(resp.response._body.valuesAsArray);
-        //console.log("Energy consumed = " + resp.response._body.valuesAsArray[0]);
-        // console.log("Energy produced = " + resp.response._body.valuesAsArray[1]);
+        //        console.log(resp.response._body.valuesAsArray);
+        const energyConsumed = resp.response._body.valuesAsArray[0];
+        const energyProduced = resp.response._body.valuesAsArray[1];
+        const transaction = new Promise((resolve, reject) => {
+          resolve(
+            sendTransaction(
+              contract,
+              meterAddress,
+              energyConsumed,
+              energyProduced
+            )
+          );
+        })
+          .then((transaction) => {
+            console.log(`Transacción - ${transaction.hash} ok`);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }, console.error);
       const allFcs = Promise.all([fc03]);
       allFcs.then(function () {

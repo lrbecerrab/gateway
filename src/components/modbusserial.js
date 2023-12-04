@@ -1,31 +1,66 @@
 const modbus = require("jsmodbus");
+const SerialPort = require('serialport');
+
+
+
 
 const net = require("net");
+const { sendTransaction } = require("./dlt.js");
 
-const reportSerial = (port, baudrate, modbusId, delay, _energy) => {
+const reportTCP = (
+  contract,
+  meterAddress,
+  ipAddress,
+  port,
+  modbusId,
+  delay
+) => {
+
   const options = {
-    host: ipAddress,
-    port: port,
+    baudRate: 9600
   };
-  const socket = new net.Socket();
-  const client = new modbus.client.TCP(socket, modbusId);
+
+
+  /*   console.log("Reading energy...Ctrl+C to stop");
+  console.log("Meter address: ", meterAddress);
+  console.log("ipAddress: ", ipAddress);
+  console.log("Port: ", port);
+  console.log("Modbus ID: ", modbusId);
+  console.log("Delay: ", delay); */
+
+
+  const socket = new SerialPort("/dev/tty-usbserial1", options)
+  const client = new Modbus.client.RTU(socket, modbusId)
+
+
   let cycleDone = true;
-  socket.on("Conexión", function () {
+
+  socket.on("connect", function () {
     setInterval(function () {
       if (!cycleDone) {
         return;
       }
       cycleDone = false;
-      console.log("E+, E-");
       const fc03 = client.readHoldingRegisters(0, 2).then(function (resp) {
-        console.log(resp.response._body.valuesAsArray);
-        _energy[0] = resp.response._body.valuesAsArray[0];
-        _energy[1] = resp.response._body.valuesAsArray[0];
-        report(
-          "",
-          resp.response._body.valuesAsArray[0],
-          resp.response._body.valuesAsArray[1]
-        );
+        //        console.log(resp.response._body.valuesAsArray);
+        const energyConsumed = resp.response._body.valuesAsArray[0];
+        const energyProduced = resp.response._body.valuesAsArray[1];
+        const transaction = new Promise((resolve, reject) => {
+          resolve(
+            sendTransaction(
+              contract,
+              meterAddress,
+              energyConsumed,
+              energyProduced
+            )
+          );
+        })
+          .then((transaction) => {
+            console.log(`Transacción - ${transaction.hash} ok`);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }, console.error);
       const allFcs = Promise.all([fc03]);
       allFcs.then(function () {
