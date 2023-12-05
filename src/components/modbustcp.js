@@ -12,8 +12,8 @@ const reportTCP = (
 ) => {
   const socket = new net.Socket();
   const options = {
-    host: "127.0.0.1",
-    port: 502,
+    host: ipAddress,
+    port: port,
   };
   /*   console.log("Reading energy...Ctrl+C to stop");
   console.log("Meter address: ", meterAddress);
@@ -22,7 +22,7 @@ const reportTCP = (
   console.log("Modbus ID: ", modbusId);
   console.log("Delay: ", delay); */
 
-  const client = new modbus.client.TCP(socket);
+  const client = new modbus.client.TCP(socket, modbusId);
 
   let cycleDone = true;
 

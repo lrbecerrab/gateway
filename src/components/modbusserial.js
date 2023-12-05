@@ -1,8 +1,5 @@
 const modbus = require("jsmodbus");
-const SerialPort = require('serialport');
-
-
-
+const SerialPort = require("serialport");
 
 const net = require("net");
 const { sendTransaction } = require("./dlt.js");
@@ -10,16 +7,15 @@ const { sendTransaction } = require("./dlt.js");
 const reportTCP = (
   contract,
   meterAddress,
-  ipAddress,
-  port,
+  serialPort, //"/dev/tty-usbserial1",
+  baudrate,
   modbusId,
   delay
 ) => {
-
   const options = {
-    baudRate: 9600
+    baudRate: baudrate,
+    serialPort: serialPort,
   };
-
 
   /*   console.log("Reading energy...Ctrl+C to stop");
   console.log("Meter address: ", meterAddress);
@@ -28,10 +24,8 @@ const reportTCP = (
   console.log("Modbus ID: ", modbusId);
   console.log("Delay: ", delay); */
 
-
-  const socket = new SerialPort("/dev/tty-usbserial1", options)
-  const client = new Modbus.client.RTU(socket, modbusId)
-
+  const socket = new SerialPort("/dev/tty-usbserial1", options);
+  const client = new Modbus.client.RTU(socket, modbusId);
 
   let cycleDone = true;
 
