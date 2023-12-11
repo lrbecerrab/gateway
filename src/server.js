@@ -2,7 +2,7 @@ const { array } = require("yargs");
 const { createContract, sendTransaction } = require("./components/dlt.js");
 const { simulateEnergy } = require("./components/simulator.js");
 const { reportTCP } = require("./components/modbustcp.js");
-const { reportSerial } = require("./components/modbustcp.js");
+const { reportSerial } = require("./components/modbusserial.js");
 
 const {
   ethereumProviderUrl,

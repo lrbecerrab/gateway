@@ -4,7 +4,7 @@ const SerialPort = require("serialport");
 const net = require("net");
 const { sendTransaction } = require("./dlt.js");
 
-const reportTCP = (
+const reportSerial = (
   contract,
   meterAddress,
   serialPort, //"/dev/tty-usbserial1",
@@ -67,4 +67,4 @@ const reportTCP = (
   socket.connect(options);
 };
 
-module.exports = { reportTCP };
+module.exports = { reportSerial };
