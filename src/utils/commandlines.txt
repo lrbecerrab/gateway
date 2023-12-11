@@ -1,8 +1,8 @@
 Simulated
   Prosumer-Ethereum
-  node src/server.js simulated -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" -e -r c
+  node src/server.js simulated -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" -e -r -c
   Prosumer-Iota
-  node src/server.js simulated -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" -e -r c
+  node src/server.js simulated -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" -e -r -c
 
   Producer-Ethereum
   node src/server.js simulated -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" -e -r 
@@ -11,14 +11,14 @@ Simulated
 
 TCP/IP
 Prosumer-Ethereum
-node src/server.js real -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" tcp -i="127.0.0.1" -p=502 m=1 -e -r c
+node src/server.js real -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" tcp -i="127.0.0.1" -p=502 m=1 -e -r -c
 Prosumer-Iota
-node src/server.js real -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" tcp -i="127.0.0.1" -p=502 m=1 -t -r c
+node src/server.js real -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" tcp -i="127.0.0.1" -p=502 m=1 -t -r -c
 
 
 Serial
 Consumer-Ethereum
-node src/server.js real -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" serial -s=COM1 -b=9600 m=1 -e -r c
+node src/server.js real -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" serial -s='dev/ttyUSB0' -b=9600 m=1 -e -r -c
 Prosumer-Iota
 node src/server.js real -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" serial -s=COM1 -b=9600 m=1 -t -r c
 

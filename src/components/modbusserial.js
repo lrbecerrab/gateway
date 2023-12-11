@@ -14,7 +14,7 @@ const reportTCP = (
 ) => {
   const options = {
     baudRate: baudrate,
-    serialPort: serialPort,
+    serialPort: "dev/ttyUSB0",
   };
 
   /*   console.log("Reading energy...Ctrl+C to stop");
