@@ -18,12 +18,12 @@ const simulateEnergy = async (
     startTime = new Date();
 
     let header = `Contrato ${contract.address}\nMedidor ${meterAddress}\nSimulación de reporte de energía en ${network} -> Empieza ${startTime} ...Ctrl + C para terminar la simulación\n`;
-    fs.appendFile(`./${network}-${meterAddress}.csv`, header, (err) => {
+    fs.appendFile(`./data/${network}-${meterAddress}.csv`, header, (err) => {
       // In case of a error throw err.
       if (err) throw err;
     });
     fs.appendFile(
-      `./${network}-${meterAddress}.csv`,
+      `./data/${network}-${meterAddress}.csv`,
       "Transaction Hash, Initial Timestamp, Final TimeStamp, Execution time (ms)\n",
       (err) => {
         // In case of a error throw err.
@@ -31,27 +31,31 @@ const simulateEnergy = async (
       }
     );
     console.log(header);
-
-    setInterval(async function () {
-      let measures = await getMeasures(contract, meterAddress);
-      let energyConsumed = measures.energyConsumed;
-      let energyProduced = measures.energyProduced;
-      if (consumer) energyConsumed += getEnergy(10);
-      if (producer) energyProduced += getEnergy(15);
-      console.log(
-        "Energía consumida: " +
-          energyConsumed +
-          " Energía producida: " +
+    let measures = await getMeasures(contract, meterAddress);
+    let energyConsumed = measures.energyConsumed;
+    let energyProduced = measures.energyProduced;
+    setInterval(
+      async function () {
+        if (consumer) energyConsumed += getEnergy(10);
+        if (producer) energyProduced += getEnergy(15);
+        console.log(
+          "Energía consumida: " +
+            energyConsumed +
+            " Energía producida: " +
+            energyProduced
+        );
+        const transaction = await sendTransaction(
+          network,
+          contract,
+          meterAddress,
+          energyConsumed,
           energyProduced
-      );
-      const transaction = await sendTransaction(
-        network,
-        contract,
-        meterAddress,
-        energyConsumed,
-        energyProduced
-      );
-    }, delay);
+        );
+      },
+      delay,
+      energyConsumed,
+      energyProduced
+    );
   } catch (error) {
     console.log(error);
     throw new Error("Error en la simulación");

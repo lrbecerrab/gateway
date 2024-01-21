@@ -37,7 +37,7 @@ const sendTransaction = async (
     console.log(`${finalTimeStamp} <- ${transaction.hash}-Transacción exitosa`);
     console.log(`Tiempo de respuesta: ${latency} ms`);
     let data = `${transaction.hash},${initialTimeStamp}, ${finalTimeStamp}, ${latency}\n`;
-    fs.appendFile(`./${network}-${meterAddress}.csv`, data, (err) => {
+    fs.appendFile(`./data/${network}-${meterAddress}.csv`, data, (err) => {
       // In case of a error throw err.
       if (err) throw err;
     });
