@@ -84,7 +84,6 @@ const reportingMeasures = new Promise(async (resolve, reject) => {
     if (type === "simulated") {
       const reportedEnergy = await simulateEnergy(
         network,
-        providerUrl,
         contract,
         meterAddress,
         consumer,
@@ -97,7 +96,6 @@ const reportingMeasures = new Promise(async (resolve, reject) => {
         console.log("meter real with serial communication");
         const reportedEnergy = await reportSerial(
           network,
-          providerUrl,
           contract,
           meterAddress,
           serialPort,
@@ -109,7 +107,6 @@ const reportingMeasures = new Promise(async (resolve, reject) => {
         console.log("meter real with TCP/IP communication");
         const reportedEnergy = await reportTCP(
           network,
-          providerUrl,
           contract,
           meterAddress,
           ipAddress,

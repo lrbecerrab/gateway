@@ -1,5 +1,7 @@
 const ethers = require("ethers");
-const fs = require("fs");
+const { saveRecord } = require("./recording.js");
+
+const decimals = Math.pow(10, 18);
 
 const createContract = (
   signerpk,
@@ -36,11 +38,19 @@ const sendTransaction = async (
     latency = finalTimeStamp - initialTimeStamp;
     console.log(`${finalTimeStamp} <- ${transaction.hash}-Transacción exitosa`);
     console.log(`Tiempo de respuesta: ${latency} ms`);
-    let data = `${transaction.hash},${initialTimeStamp}, ${finalTimeStamp}, ${latency}\n`;
-    fs.appendFile(`./data/${network}-${meterAddress}.csv`, data, (err) => {
-      // In case of a error throw err.
-      if (err) throw err;
-    });
+    let data = [
+      transaction.hash,
+      initialTimeStamp,
+      finalTimeStamp,
+      latency,
+      network,
+      meterAddress,
+      contract.address,
+      new Date(),
+      _energyConsumed,
+      _energyProduced,
+    ];
+    saveRecord(data);
   } catch (error) {
     console.log(error);
   }
@@ -59,7 +69,11 @@ const getTransaction = async (providerUrl, transactionHash) => {
 const getMeasures = async (contract, meterAddress) => {
   try {
     const measures = await contract.meterMeasures(meterAddress);
-    return measures;
+    let eConsumed =
+      ethers.utils.formatEther(measures.energyConsumed) * decimals;
+    let eProduced =
+      ethers.utils.formatEther(measures.energyProduced) * decimals;
+    return { eConsumed, eProduced };
   } catch (error) {
     console.log(error);
   }

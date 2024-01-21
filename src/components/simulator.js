@@ -1,5 +1,4 @@
 const { sendTransaction, getMeasures } = require("./dlt.js");
-const fs = require("fs");
 
 const getEnergy = (nominalValue) => {
   return Math.floor(Math.random() * nominalValue);
@@ -7,7 +6,6 @@ const getEnergy = (nominalValue) => {
 
 const simulateEnergy = async (
   network,
-  providerUrl,
   contract,
   meterAddress,
   consumer,
@@ -15,47 +13,27 @@ const simulateEnergy = async (
   delay
 ) => {
   try {
-    startTime = new Date();
-
-    let header = `Contrato ${contract.address}\nMedidor ${meterAddress}\nSimulación de reporte de energía en ${network} -> Empieza ${startTime} ...Ctrl + C para terminar la simulación\n`;
-    fs.appendFile(`./data/${network}-${meterAddress}.csv`, header, (err) => {
-      // In case of a error throw err.
-      if (err) throw err;
-    });
-    fs.appendFile(
-      `./data/${network}-${meterAddress}.csv`,
-      "Transaction Hash, Initial Timestamp, Final TimeStamp, Execution time (ms)\n",
-      (err) => {
-        // In case of a error throw err.
-        if (err) throw err;
-      }
-    );
+    let header = `Contrato ${
+      contract.address
+    }\nMedidor ${meterAddress}\nSimulación de reporte de energía en ${network} -> Empieza ${new Date()} ...Ctrl + C para terminar la simulación\n`;
     console.log(header);
-    let measures = await getMeasures(contract, meterAddress);
-    let energyConsumed = 0;
-    let energyProduced = 0;
-    setInterval(
-      async function () {
-        if (consumer) energyConsumed += getEnergy(10);
-        if (producer) energyProduced += getEnergy(15);
-        console.log(
-          "Energía consumida: " +
-            energyConsumed +
-            " Energía producida: " +
-            energyProduced
-        );
-        const transaction = await sendTransaction(
-          network,
-          contract,
-          meterAddress,
-          energyConsumed,
-          energyProduced
-        );
-      },
-      delay,
-      energyConsumed,
-      energyProduced
-    );
+    setInterval(async function () {
+      let measures = await getMeasures(contract, meterAddress);
+      console.log("measures: ", measures);
+      let energyConsumed = measures.eConsumed;
+      let energyProduced = measures.eProduced;
+      if (consumer) energyConsumed += getEnergy(10);
+      if (producer) energyProduced += getEnergy(15);
+      console.log("energyConsumed: ", energyConsumed);
+      console.log("energyProduced: ", energyProduced);
+      const transaction = await sendTransaction(
+        network,
+        contract,
+        meterAddress,
+        energyConsumed,
+        energyProduced
+      );
+    }, delay);
   } catch (error) {
     console.log(error);
     throw new Error("Error en la simulación");
