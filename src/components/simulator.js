@@ -32,8 +32,8 @@ const simulateEnergy = async (
     );
     console.log(header);
     let measures = await getMeasures(contract, meterAddress);
-    let energyConsumed = measures.energyConsumed;
-    let energyProduced = measures.energyProduced;
+    let energyConsumed = 0;
+    let energyProduced = 0;
     setInterval(
       async function () {
         if (consumer) energyConsumed += getEnergy(10);

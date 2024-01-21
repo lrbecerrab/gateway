@@ -6,6 +6,7 @@
 
 ARG NODE_VERSION=18.18.0
 ARG METERADDRESS
+ARG NETWORK
 
 FROM node:${NODE_VERSION}-alpine
 
@@ -26,4 +27,4 @@ RUN npm install
 COPY . .
 
 # Run the application.
-CMD node src/server.js simulated -a=${METERADDRESS} -e -r -c
+CMD node src/server.js simulated -a=${METERADDRESS} ${NETWORK} -r -c
