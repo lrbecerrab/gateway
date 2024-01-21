@@ -27,5 +27,4 @@ RUN npm install
 COPY . .
 
 # Run the application.
-RUN node src/server.js simulated -a=${METERADDRESS} ${NETWORK} -r -c
 CMD node src/server.js simulated -a=${METERADDRESS} ${NETWORK} -r -c
