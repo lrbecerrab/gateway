@@ -1,42 +1,60 @@
-const { sendTransaction } = require("./dlt.js");
+const { sendTransaction, getTransaction } = require("./dlt.js");
+const fs = require("fs");
 
 const getEnergy = (nominalValue) => {
   return Math.floor(Math.random() * nominalValue);
 };
 
-const simulateEnergy = (contract, meterAddress, consumer, producer, delay) => {
-  let energyConsumed = 0;
-  let energyProduced = 0;
-  console.log("Simulating energy...Ctrl+C to stop");
-  setInterval(
-    function () {
+const simulateEnergy = async (
+  network,
+  providerUrl,
+  contract,
+  meterAddress,
+  consumer,
+  producer,
+  delay
+) => {
+  try {
+    startTime = new Date();
+
+    let header = `Contrato ${contract.address}\nMedidor ${meterAddress}\nSimulación de reporte de energía en ${network} -> Empieza ${startTime} ...Ctrl + C para terminar la simulación\n`;
+    fs.appendFile(`./${network}-${meterAddress}.csv`, header, (err) => {
+      // In case of a error throw err.
+      if (err) throw err;
+    });
+    fs.appendFile(
+      `./${network}-${meterAddress}.csv`,
+      "Transaction Hash, Initial Timestamp, Final TimeStamp, Execution time (ms)\n",
+      (err) => {
+        // In case of a error throw err.
+        if (err) throw err;
+      }
+    );
+    console.log(header);
+
+    setInterval(async function () {
+      let energyConsumed = 0;
+      let energyProduced = 0;
       if (consumer) energyConsumed += getEnergy(10);
       if (producer) energyProduced += getEnergy(15);
       console.log(
-        "Consumed: " + energyConsumed + " Produced: " + energyProduced
+        "Energía consumida: " +
+          energyConsumed +
+          " Energía producida: " +
+          energyProduced
       );
-
-      const transaction = new Promise((resolve, reject) => {
-        resolve(
-          sendTransaction(
-            contract,
-            meterAddress,
-            energyConsumed,
-            energyProduced
-          )
-        );
-      })
-        .then((transaction) => {
-          console.log(`Transacción - ${transaction.hash} ok`);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    delay,
-    energyConsumed,
-    energyProduced
-  );
+      const transaction = await sendTransaction(
+        network,
+        contract,
+        meterAddress,
+        energyConsumed,
+        energyProduced
+      );
+    }, delay);
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error en la simulación");
+  }
 };
 
 module.exports = { simulateEnergy };

@@ -17,6 +17,7 @@
   "author": "BecerraL",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.5",
     "bash": "^0.0.1",
     "dotenv-cli": "^7.3.0",
     "ethers": "^5.7.2",

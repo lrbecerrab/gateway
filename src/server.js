@@ -53,22 +53,23 @@ const consumer = argv.c || false;
 const ethereumNetwork = argv.e || false;
 const iotaNetwork = argv.t || false;
 
-console.log(`You have selected a ${type} meter with address ${meterAddress}`);
-
 let providerUrl;
 let contractAddress;
 let abi;
+let network;
 
 if (ethereumNetwork) {
   providerUrl = ethereumProviderUrl;
   contractAddress = ethereumContractAddress;
   abi = ethereumAbi;
+  network = "ethereum";
 } else if (iotaNetwork) {
   providerUrl = iotaProviderUrl;
   contractAddress = iotaContractAddress;
   abi = iotaAbi;
+  network = "iota";
 }
-const delay = 30000;
+const delay = 60000;
 
 const reportingMeasures = new Promise(async (resolve, reject) => {
   const contract = await createContract(
@@ -81,8 +82,9 @@ const reportingMeasures = new Promise(async (resolve, reject) => {
 }).then((contract) => {
   const typeSource = new Promise(async (resolve, reject) => {
     if (type === "simulated") {
-      console.log("meter simulated");
       const reportedEnergy = await simulateEnergy(
+        network,
+        providerUrl,
         contract,
         meterAddress,
         consumer,
@@ -94,6 +96,8 @@ const reportingMeasures = new Promise(async (resolve, reject) => {
       if (comm === "serial") {
         console.log("meter real with serial communication");
         const reportedEnergy = await reportSerial(
+          network,
+          providerUrl,
           contract,
           meterAddress,
           serialPort,
@@ -104,6 +108,8 @@ const reportingMeasures = new Promise(async (resolve, reject) => {
       } else if (comm === "tcp") {
         console.log("meter real with TCP/IP communication");
         const reportedEnergy = await reportTCP(
+          network,
+          providerUrl,
           contract,
           meterAddress,
           ipAddress,
