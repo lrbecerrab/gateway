@@ -14,6 +14,9 @@ const iotaContractAddress = "0x7B11c1D0f396589a33117C86AA82d66aa1C18888";
 const iotaAbi = iotaJSON.abi;
 const iotaProviderUrl = "https://json-rpc.evm.testnet.shimmer.network";
 
+const apiKeyEtherScan = "U533XNVJCJ5T8MIFEXSRUHQHA3MX82FNKY";
+const apiKeyIotaScan = "108f1e88-a873-470f-a550-91ee20cac5a9";
+
 module.exports = {
   ethereumProviderUrl,
   ethereumContractAddress,
@@ -22,4 +25,6 @@ module.exports = {
   iotaContractAddress,
   iotaAbi,
   signerPrivateKey,
+  apiKeyEtherScan,
+  apiKeyIotaScan,
 };
