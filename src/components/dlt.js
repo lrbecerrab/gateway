@@ -56,4 +56,18 @@ const getTransaction = async (providerUrl, transactionHash) => {
   }
 };
 
-module.exports = { createContract, sendTransaction, getTransaction };
+const getMeasures = async (contract, meterAddress) => {
+  try {
+    const measures = await contract.meterMeasures(meterAddress);
+    return measures;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  createContract,
+  sendTransaction,
+  getTransaction,
+  getMeasures,
+};

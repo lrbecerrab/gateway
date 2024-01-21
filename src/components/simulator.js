@@ -1,4 +1,4 @@
-const { sendTransaction, getTransaction } = require("./dlt.js");
+const { sendTransaction, getMeasures } = require("./dlt.js");
 const fs = require("fs");
 
 const getEnergy = (nominalValue) => {
@@ -33,8 +33,9 @@ const simulateEnergy = async (
     console.log(header);
 
     setInterval(async function () {
-      let energyConsumed = 0;
-      let energyProduced = 0;
+      let measures = await getMeasures(contract, meterAddress);
+      let energyConsumed = measures.energyConsumed;
+      let energyProduced = measures.energyProduced;
       if (consumer) energyConsumed += getEnergy(10);
       if (producer) energyProduced += getEnergy(15);
       console.log(
