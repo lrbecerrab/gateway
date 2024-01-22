@@ -1,6 +1,6 @@
 Simulated
   Prosumer-Ethereum
-  node src/server.js simulated -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" -e -r -c
+  node src/server.js simulated -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" -k="" -w="" -e -r -c
   Prosumer-Iota
   node src/server.js simulated -a="93d5e4721C9387b17d0DD9Ac2Da7279062bFD0F9" -t -r -c
 

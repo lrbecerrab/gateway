@@ -11,14 +11,15 @@ const simulateEnergy = async (
   meterAddress,
   consumer,
   producer,
-  delay
+  delay,
+  dbPassword
 ) => {
   try {
     let header = `Contrato ${
       contract.address
     }\nMedidor ${meterAddress}\nSimulación de reporte de energía en ${network} -> Empieza ${new Date()} ...Ctrl + C para terminar la simulación\n`;
     console.log(header);
-    const connection = await connectDB();
+    const connection = await connectDB(dbPassword);
     setInterval(async function () {
       let measures = await getMeasures(contract, meterAddress);
       console.log("measures: ", measures);

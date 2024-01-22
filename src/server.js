@@ -11,13 +11,14 @@ const {
   iotaProviderUrl,
   iotaContractAddress,
   iotaAbi,
-  signerPrivateKey,
 } = require("./utils/constants");
 
 var argv = require("yargs/yargs")(process.argv.slice(2))
   .usage("Usage: $0 simulated -a='0xffabc'--<options>")
   .usage("Usage: $0 real -a='0xffabc' tcp/serial --<options>")
   .describe("a", "the meter account in Ethereum or Iota")
+  .describe("k", "signer Private Key")
+  .describe("w", "db password")
   .describe("e", "network Ethereum-Sepolia")
   .describe("t", "network Iota-Shimmer")
   .describe("b", "serial baudrate")
@@ -43,6 +44,8 @@ var argv = require("yargs/yargs")(process.argv.slice(2))
 const type = argv._[0];
 const comm = argv._[1];
 const meterAddress = argv.a.toString(16);
+const signerPrivateKey = argv.k.toString(16);
+const dbPassword = argv.w.toString(16);
 const baudrate = argv.b;
 const serialPort = argv.s;
 const ipAddress = argv.i;
@@ -52,7 +55,6 @@ const producer = argv.r || false;
 const consumer = argv.c || false;
 const ethereumNetwork = argv.e || false;
 const iotaNetwork = argv.t || false;
-
 let providerUrl;
 let contractAddress;
 let abi;
@@ -88,7 +90,8 @@ const reportingMeasures = new Promise(async (resolve, reject) => {
         meterAddress,
         consumer,
         producer,
-        delay
+        delay,
+        dbPassword
       );
     }
     if (type === "real") {

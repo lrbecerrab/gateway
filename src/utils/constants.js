@@ -12,14 +12,12 @@ const iotaProviderUrl = "https://json-rpc.evm.testnet.shimmer.network";
 
 // Contrato Ethereum
 const ALCHEMY_API_KEY = "lllJfVK-WoLtGdBK1XmBxzi0a1qfYm2y";
-const signerPrivateKey =
-  "e92aa045f53800f6cac59ded0e31c3fbf38aa052753dfcf68609c648b92857ea";
 
 const DBENDPOINT =
   "energytransactevaluationdb.cuagigzqx6cc.us-east-1.rds.amazonaws.com";
 const DATABASE = "evaluationdb";
 const USER = "admin";
-const WP = "6CEBb7b1d5c";
+
 module.exports = {
   ethereumProviderUrl,
   ethereumContractAddress,
@@ -27,9 +25,7 @@ module.exports = {
   iotaProviderUrl,
   iotaContractAddress,
   iotaAbi,
-  signerPrivateKey,
   DBENDPOINT,
   DATABASE,
   USER,
-  WP,
 };

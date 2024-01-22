@@ -1,13 +1,13 @@
 var mysql = require("mysql");
 
-const { DBENDPOINT, DATABASE, USER, WP } = require("../utils/constants");
+const { DBENDPOINT, DATABASE, USER } = require("../utils/constants");
 
-const connectDB = () => {
+const connectDB = (dbPassword) => {
   const connection = mysql.createConnection({
     host: DBENDPOINT,
     port: "3306",
     user: USER,
-    password: WP,
+    password: dbPassword,
     database: DATABASE,
   });
 
