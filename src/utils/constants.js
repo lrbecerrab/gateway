@@ -11,12 +11,12 @@ const iotaContractAddress = "0x30622aD85f0126508a1459db7c6A56F33514b61B";
 const iotaProviderUrl = "https://json-rpc.evm.testnet.shimmer.network";
 
 // Contrato Ethereum
-const ALCHEMY_API_KEY = "lllJfVK-WoLtGdBK1XmBxzi0a1qfYm2y";
+const ALCHEMY_API_KEY = "myalquemykey";
 
 const DBENDPOINT =
-  "energytransactevaluationdb.cuagigzqx6cc.us-east-1.rds.amazonaws.com";
-const DATABASE = "evaluationdb";
-const USER = "admin";
+  "myendpoint";
+const DATABASE = "mydb";
+const USER = "myuser";
 
 module.exports = {
   ethereumProviderUrl,
