@@ -2,7 +2,7 @@ var mysql = require("mysql");
 
 const { DBENDPOINT, DATABASE, USER, WP } = require("../utils/constants");
 
-const saveRecord = (data) => {
+const connectDB = () => {
   const connection = mysql.createConnection({
     host: DBENDPOINT,
     port: "3306",
@@ -11,17 +11,30 @@ const saveRecord = (data) => {
     database: DATABASE,
   });
 
-  connection.connect(function (err) {
-    if (err) throw err;
-    console.log("Connected!");
+  connection.connect((err) => {
+    if (err) {
+      console.log("Error connecting to Db");
+      console.log(err.message);
+      connection.end();
+    }
+    console.log("Connection established");
   });
-  console.log("data: ", data);
-
-  /* var sql = "INSERT INTO transactions (meterAddress) VALUES ?";
-  connection.query(sql, data, function (err, result) {
-    if (err) throw err;
-    console.log("1 record inserted");
-  }); */
+  return connection;
 };
 
-module.exports = { saveRecord };
+const saveRecord = async (connection, data) => {
+  try {
+    const sql =
+      "INSERT INTO transactions (network, contract, meteraddress, datetimestamp, transactionhash, econsumed, eproduced, initialtimestamp, finaltimestamp, latency) VALUES (?,?,?,?,?,?,?,?,?,?);";
+    connection.query(sql, data, (err, result) => {
+      if (err) {
+        console.log(err.message);
+      }
+      console.log("Registro insertado");
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { saveRecord, connectDB };

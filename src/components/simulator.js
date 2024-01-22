@@ -1,4 +1,5 @@
 const { sendTransaction, getMeasures } = require("./dlt.js");
+const { connectDB } = require("./recording.js");
 
 const getEnergy = (nominalValue) => {
   return Math.floor(Math.random() * nominalValue);
@@ -17,6 +18,7 @@ const simulateEnergy = async (
       contract.address
     }\nMedidor ${meterAddress}\nSimulación de reporte de energía en ${network} -> Empieza ${new Date()} ...Ctrl + C para terminar la simulación\n`;
     console.log(header);
+    const connection = await connectDB();
     setInterval(async function () {
       let measures = await getMeasures(contract, meterAddress);
       console.log("measures: ", measures);
@@ -31,9 +33,10 @@ const simulateEnergy = async (
         contract,
         meterAddress,
         energyConsumed,
-        energyProduced
+        energyProduced,
+        connection
       );
-    }, delay);
+    }, delay,connection);
   } catch (error) {
     console.log(error);
     throw new Error("Error en la simulación");
