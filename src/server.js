@@ -71,7 +71,7 @@ if (ethereumNetwork) {
   abi = iotaAbi;
   network = "iota";
 }
-const delay = 60000;
+const delay = 300000;
 
 const reportingMeasures = new Promise(async (resolve, reject) => {
   const contract = await createContract(
