@@ -24,11 +24,11 @@ const sendTransaction = async (
 ) => {
   try {
     initialTimeStamp = Date.now();
-    const transaction = await contract.meterReport(
+    /*const transaction = await contract.meterReport(
       meterAddress,
       _energyConsumed,
       _energyProduced,
-      { gasLimit: 70000 }
+      { gasLimit: 2000000 }
     );
     console.log(
       `${initialTimeStamp} -> ${transaction.hash}- enviando transacción`
@@ -38,11 +38,12 @@ const sendTransaction = async (
     latency = finalTimeStamp - initialTimeStamp;
     console.log(`${finalTimeStamp} <- ${transaction.hash}-Transacción exitosa`);
     console.log(`Tiempo de respuesta: ${latency} ms`);
+    */
     let data = [
-      transaction.hash,
-      initialTimeStamp,
-      finalTimeStamp,
-      latency,
+      "ff",
+      1705881328516,
+      1705881355980,
+      27464,
       network,
       meterAddress,
       contract.address,
@@ -50,7 +51,7 @@ const sendTransaction = async (
       _energyConsumed,
       _energyProduced,
     ];
-    saveRecord(data);
+    saveRecord(meterAddress);
   } catch (error) {
     console.log(error);
   }

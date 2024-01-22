@@ -13,7 +13,7 @@ const iotaProviderUrl = "https://json-rpc.evm.testnet.shimmer.network";
 // Contrato Ethereum
 const ALCHEMY_API_KEY = "lllJfVK-WoLtGdBK1XmBxzi0a1qfYm2y";
 const signerPrivateKey =
-  "03e12541082027e207b650e4b939576c6b204cebc5ba313e4cfa223b6c775913";
+  "e92aa045f53800f6cac59ded0e31c3fbf38aa052753dfcf68609c648b92857ea";
 
 const DBENDPOINT =
   "energytransactevaluationdb.cuagigzqx6cc.us-east-1.rds.amazonaws.com";
@@ -31,4 +31,5 @@ module.exports = {
   DBENDPOINT,
   DATABASE,
   USER,
+  WP,
 };
